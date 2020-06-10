@@ -3,6 +3,17 @@
 # more directives.
 :2020 {
 
+ # Set up logger.
+  log {
+  	output file audit.log {
+    	roll_size     10mb
+    	roll_keep     5
+    	roll_keep_for 48h
+    }
+  	format json
+  	level  DEBUG
+  }
+
   # Set up header policies.
   header {
   	# enable HSTS
@@ -36,24 +47,19 @@
   # Set this path to your site's directory.
   root * /usr/share/caddy
 
+  @notAPI {
+      not {
+          path /api/*
+      }
+      file {
+          try_files {path} {path}/ /index.html
+      }
+  }
+  rewrite @notAPI {http.matchers.file.relative}
+
   route /api/* {
   	uri strip_prefix /api
   	reverse_proxy backend:8080
-  	# try_files {path} {path}/ /index.html?{query}
-  }
-
-  # Rewrites the request URI path to the first of the listed files which exists in the site root.
-
-
-  # Set up logger.
-  log {
-  	output file audit.log {
-    	roll_size     10mb
-    	roll_keep     5
-    	roll_keep_for 48h
-    }
-  	format json
-  	level  DEBUG
   }
 
   file_server
