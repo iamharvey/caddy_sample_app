@@ -1,6 +1,8 @@
 # Below configuration if for testing caddy server locally.
 # Checkout https://caddyserver.com/docs/caddyfile/directives for adding
 # more directives.
+# Also, order matters in Caddy. So get fam with this directive order:
+# https://caddyserver.com/docs/caddyfile/directives#directive-order.
 :2020 {
 
  # Set up logger.
