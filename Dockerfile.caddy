@@ -1,0 +1,10 @@
+FROM caddy:2.0.0
+
+# Copy built site content
+COPY web /usr/share/caddy/
+
+# Copy Caddyfile
+COPY Caddyfile /etc/caddy/Caddyfile
+
+# Caddy img will start the server for us based on Caddyfile
+# so we dont need use 'CMD' to start the server here.

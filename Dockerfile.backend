@@ -1,0 +1,9 @@
+FROM golang:1.14
+
+# Copy recipes.
+WORKDIR /app
+COPY main.go .
+COPY go.mod .
+RUN go build main.go
+
+CMD ["/app/main"]

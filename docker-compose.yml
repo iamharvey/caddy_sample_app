@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  caddy:
+    container_name: caddy
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
+    ports:
+      - "2020:2020"
+    depends_on:
+      - backend
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"

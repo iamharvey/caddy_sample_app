@@ -1,0 +1,61 @@
+# Below configuration if for testing caddy server locally.
+# Checkout https://caddyserver.com/docs/caddyfile/directives for adding
+# more directives.
+:2020 {
+
+  # Set up header policies.
+  header {
+  	# enable HSTS
+  	Strict-Transport-Security max-age=31536000;
+
+  	# disable clients from sniffing the media type
+  	X-Content-Type-Options nosniff
+
+  	# clickjacking protection
+  	X-Frame-Options DENY
+
+  	# keep referrer data off of HTTP connections
+  	Referrer-Policy no-referrer-when-downgrade
+  }
+
+  # Multiple header. Applying different cache policies.
+  route {
+    header           Cache-Control max=age=3600
+    header /static/* Cache-Control max-age=31536000
+  }
+
+  # Set encoding algorithm for response.
+  encode zstd gzip
+
+  # Set some auto-reponds
+  respond /health-check 200
+
+  # Add templates module.
+  templates
+
+  # Set this path to your site's directory.
+  root * /usr/share/caddy
+
+  route /api/* {
+  	uri strip_prefix /api
+  	reverse_proxy backend:8080
+  	# try_files {path} {path}/ /index.html?{query}
+  }
+
+  # Rewrites the request URI path to the first of the listed files which exists in the site root.
+
+
+  # Set up logger.
+  log {
+  	output file audit.log {
+    	roll_size     10mb
+    	roll_keep     5
+    	roll_keep_for 48h
+    }
+  	format json
+  	level  DEBUG
+  }
+
+  file_server
+
+}
